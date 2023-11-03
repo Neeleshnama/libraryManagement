@@ -3,6 +3,7 @@ import Web3 from 'web3';
 import LibraryManagementContract from '../Library.json';
 import '../bookcard.css';
 
+import Navbar from './navconnection';
 
 export default function Profile () {
     const [data, updateData] = useState([]);
@@ -47,6 +48,7 @@ getborrowed();
 
         return (
             <div>
+              <Navbar/>
               <h2>Your Borrowed Books</h2>
               <ul>
                 {data.map((book, index) => (

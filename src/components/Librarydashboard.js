@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 //import Web3 from 'web3';
 import LibraryManagementContract from '../Library.json';
 import '../bookcard.css';
+import Navbar from './navconnection';
 function Librarydashboard() {
     const booksData = [
         {
@@ -77,6 +78,7 @@ function Librarydashboard() {
 
   return (
     <div className="App">
+      <Navbar/>
       <h1>Available Books</h1>
       <ul>
         {availableBooks.map((book, index) => (
