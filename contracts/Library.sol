@@ -21,6 +21,9 @@ contract LibraryManagement {
 
     constructor() {
         owner = msg.sender;
+        addBook(1,"Sample Book 1", "Sample Author 1", 2021);
+        addBook(2,"Sample Book 2", "Sample Author 2", 2019);
+        addBook(3,"Sample Book 3", "Sample Author 3", 2018);
     }
 
     modifier onlyOwner() {

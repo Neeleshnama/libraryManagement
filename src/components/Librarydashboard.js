@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Web3 from 'web3';
+//import Web3 from 'web3';
 import LibraryManagementContract from '../Library.json';
 import '../bookcard.css';
 function Librarydashboard() {
@@ -41,9 +41,9 @@ function Librarydashboard() {
     
   const [web3, setWeb3] = useState(null);
   const [contract, setContract] = useState(null);
-  const [availableBooks, setAvailableBooks] = useState(booksData);
+  const [availableBooks, setAvailableBooks] = useState([]);
 
-  useEffect(() => {
+ 
     async function loadBlockchainData() {
         const ethers = require("ethers");
         //After adding your Hardhat network to your metamask, this code will get providers and signers
@@ -52,7 +52,8 @@ function Librarydashboard() {
         //Pull the deployed contract instance
         let contract = new ethers.Contract(LibraryManagementContract.address, LibraryManagementContract.abi, signer)
         // //create an NFT Token
-         let books= await contract.getAvailableBooks()
+         let books= await contract.getAvailableBooks();
+         books.wait();
          
            setAvailableBooks(books);
           
@@ -60,7 +61,7 @@ function Librarydashboard() {
     
 
     loadBlockchainData();
-  }, []);
+ 
   async function handleBorrow(id) {
     const ethers = require("ethers");
     //After adding your Hardhat network to your metamask, this code will get providers and signers
