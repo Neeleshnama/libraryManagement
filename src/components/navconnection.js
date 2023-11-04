@@ -73,26 +73,44 @@ async function connectWebsite() {
   });
 
     return (
-      <div className="">
+      <div className="" style={{position:'absolute',top:'0px',left:'0px'}}>
         <nav className="w-screen navbar">
           <ul className='flex items-end justify-between py-3 bg-transparent text-white pr-5'>
           <li className='flex items-end ml-5 pb-2'>
             <Link to="/">
             <img  alt="" width={120} height={120} className="inline-block -mt-2"/>
-            <div className='inline-block font-bold italic text-2xl ml-2 text-white'>
+            <div className='inline-block font-bold italic text-2xl ml-2 text-black'>
               library Management
             </div>
             </Link>
           </li>
           <li className='w-2/6 inside'>
-            <ul className='lg:flex justify-between font-bold mr-10 text-lg'>
+            <ul className='lg:flex justify-between  bg-gradient-to-r from-red-500 to-white-500  font-bold mr-10 text-lg'>
               {location.pathname === "/" ? 
               <li >
                 <Link to="/">Dashboard</Link>
               </li>
               :
-              <li className='hover:border-b-2  bg-gradient-to-r from-purple-500 to-white-500 text-black-700 rounded-xl hover:pb-0 p-2 text-red'>
-                <Link to="/borrowed">boorowed books</Link>
+              <li className='hover:border-b-2 font-bold  bg-gradient-to-r from-red-500 to-white-500   text-black-700 rounded-xl hover:pb-0 p-2 text-red'>
+                <Link to="/">Dashboard</Link>
+              </li>              
+              }
+              {location.pathname === "/borrowed" ? 
+              <li className='border-b-2  bg-gradient-to-r from-purple-500 to-white-500 text-black-700 rounded-xl hover:pb-0 p-2'>
+                <Link to="/borrowed">Borrowed books</Link>
+              </li>
+              :
+              <li className='hover:border-b-2  bg-gradient-to-r from-red-500 to-white-500 text-black-700 rounded-xl hover:pb-0 p-2'>
+                <Link to="/borrowed">borrowed books</Link>
+              </li>              
+              }
+               {location.pathname === "/bills" ? 
+              <li className='border-b-2  bg-gradient-to-r from-purple-500 to-white-500 text-black-700 rounded-xl hover:pb-0 p-2'>
+                <Link to="/bills">Bill payments</Link>
+              </li>
+              :
+              <li className='hover:border-b-2  bg-gradient-to-r from-red-500 to-white-500 text-black-700 rounded-xl hover:pb-0 p-2'>
+                <Link to="/bills">Bill payments</Link>
               </li>              
               }
                          

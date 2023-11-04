@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Web3 from 'web3';
+//import Web3 from 'web3';
 import LibraryManagementContract from '../Library.json';
 import '../bookcard.css';
 
@@ -23,8 +23,25 @@ export default function Profile () {
         
       
         let borrowedbooks = await contract.getBorrowedBooks();
+        console.log(borrowedbooks);
+        const booksData = await Promise.all(
+          borrowedbooks.map(async (bookId) => {
+            console.log(bookId.toNumber());
+            const bookInfo = await contract.getBookDetails(bookId.toNumber());
+    
+            return {
+              id:bookId.toNumber(),
+              title: bookInfo[0],
+              author: bookInfo[1],
+              borrowed: bookInfo[3],
+            };
+          })
+        );
+    
+        // Update the state with all available books.
+       // setAvailableBooks(booksData);
 
-        updateData(borrowedbooks);
+        updateData(booksData);
         
         }
         async function handlereturn(id) {
@@ -42,8 +59,11 @@ export default function Profile () {
 
         
 
-
-getborrowed();
+        useEffect(() => {
+          // Fetch available books when the component mounts.
+          getborrowed();
+        }, []);
+//getborrowed();
 
 
         return (
@@ -53,13 +73,13 @@ getborrowed();
               <ul>
                 {data.map((book, index) => (
                     <>
-                   <div class="book-card">
+                   <div class="book-card" key={index}>
                    <h2 class="book-title">{book.title}</h2>
                    <p class="book-author">Author:{book.author}</p>
-                   <p class="book-year">Year of Publish:{book.yearOfPublish}</p>
-                   <button style={{backgroundColor:'red',color:'white'}} onClick={ handleBorrow(book.id)}>Borrow</button>
+                   <p class="book-year">borrowed</p>
+                   {/* //<button style={{backgroundColor:'red',color:'white'}} onClick={ handleBorrow(book.id)}>Borrow</button> */}
                </div>
-               <button style={{backgroundColor:'red',color:'white'}} onClick={ handlereturn(book.id)}>return</button>
+               <button style={{backgroundColor:'red',color:'white'}} onClick={()=> handlereturn(book.id)}>return</button>
 
                   <div className="mt-10 text-xl">
                   {data.length == 0 ? "Oops, No books to display (Are you logged in?)":""}

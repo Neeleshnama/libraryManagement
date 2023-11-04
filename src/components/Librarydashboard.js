@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 //import Web3 from 'web3';
-import LibraryManagementContract from '../Library.json';
+import LibraryJSON from '../Library.json';
 import '../bookcard.css';
 import Navbar from './navconnection';
 function Librarydashboard() {
@@ -43,54 +43,93 @@ function Librarydashboard() {
   const [web3, setWeb3] = useState(null);
   const [contract, setContract] = useState(null);
   const [availableBooks, setAvailableBooks] = useState([]);
+  const [formattedBooks, setformattedbooks] = useState([]);
+  const fetchAvailableBooks = async () => {
+    try {
+      const ethers = require("ethers");
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      let contract = new ethers.Contract(LibraryJSON.address, LibraryJSON.abi, signer);
+      
+      // Call the contract function to get available books.
+      const bookIds = await contract.getAvailableBooks();
+  
+      // Fetch book details for each book ID.
+      const booksData = await Promise.all(
+        bookIds.map(async (bookId) => {
+          console.log('book id',bookId.toNumber());
+          const bookInfo = await contract.getBookDetails(bookId.toNumber());
+  
+          return {
+            id:bookId.toNumber(),
+            title: bookInfo[0],
+            author: bookInfo[1],
+            borrowed: bookInfo[3],
+          };
+        })
+      );
+  
+      // Update the state with all available books.
+      setAvailableBooks(booksData);
+    } catch (error) {
+      console.error('Error fetching available books:', error);
+      // Handle the error or set an empty array if needed.
+      // setAvailableBooks([]);
+    }
+  };
+  
+  useEffect(() => {
+    // Fetch available books when the component mounts.
+    fetchAvailableBooks();
+  }, []);
+  
+// new
 
- 
-    async function loadBlockchainData() {
-        const ethers = require("ethers");
-        //After adding your Hardhat network to your metamask, this code will get providers and signers
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        //Pull the deployed contract instance
-        let contract = new ethers.Contract(LibraryManagementContract.address, LibraryManagementContract.abi, signer)
-        // //create an NFT Token
-         let books= await contract.getAvailableBooks();
-         books.wait();
-         
-           setAvailableBooks(books);
-          
-      }
-    
 
-    loadBlockchainData();
- 
+// // Replace this with your handleBorrow function to handle book borrowing.
+
+
+
+//     setformattedbooks(formattedBooks);
   async function handleBorrow(id) {
     const ethers = require("ethers");
     //After adding your Hardhat network to your metamask, this code will get providers and signers
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     //Pull the deployed contract instance
-     let contract = new ethers.Contract(LibraryManagementContract.address, LibraryManagementContract.abi, signer)
+     let contract = new ethers.Contract(LibraryJSON.address, LibraryJSON.abi, signer)
     // //create an NFT Token
      await contract.borrowBook(id);
+
      console.log('book sucessfully borrowed');
    
 };
 
   return (
-    <div className="App">
+    <div className="App" >
       <Navbar/>
       <h1>Available Books</h1>
-      <ul>
-        {availableBooks.map((book, index) => (
-            <div class="book-card">
-            <h2 class="book-title">{book.title}</h2>
-            <p class="book-author">Author:{book.author}</p>
-            <p class="book-year">Year of Publish:{book.yearOfPublish}</p>
-            <button style={{backgroundColor:'red',color:'white'}} onClick={ handleBorrow(book.id)}>Borrow</button>
+      <div style={{display:'flex'}}>
+       <ul style={{display:'flex',margin:'5px'}}> 
+        {availableBooks.map((book,key) => (
+          
+            <div  className="book-card" key={key}>
+            <h2 className="book-title" style={{color:'black'}}>Title:{book.title}</h2>
+            <p className="book-author">Author:{book.author}</p>
+            <p className="book-year">status: {book.borrowed ? 'Not available' : 'Available'}</p>
+            <p>book id:{book.id}</p>
+            <button style={{backgroundColor:'red',color:'white'}} onClick={() => handleBorrow(book.id)}>Borrow</button>
         </div>
        
         ))}
-      </ul>
+      </ul> 
+      </div>
+      
+
+
+
+
+
     </div>
   );
 }

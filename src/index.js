@@ -10,6 +10,8 @@ import {
 } from "react-router-dom";
 // import SellNFT from './components/SellNFT';
 import Librarydashboard from './components/Librarydashboard';
+import Profile from './components/borrowedbooks';
+import BillManagement from './components/billpay';
 // import Profile from './components/Profile';
 // import NFTPage from './components/NFTpage';
 
@@ -19,6 +21,9 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Librarydashboard />}/>
+        <Route path="/borrowed" element={<Profile/>}/>
+        <Route path="/bills" element={<BillManagement/>}/>
+
         {/* <Route path="/sellNFT" element={<SellNFT />}/> 
         <Route path="/nftPage/:tokenId" element={<NFTPage />}/>        
         <Route path="/profile" element={<Profile />}/>  */}

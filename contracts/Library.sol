@@ -30,7 +30,9 @@ contract LibraryManagement {
         require(msg.sender == owner, "Only the owner can call this function");
         _;
     }
-
+function getUserBill() public view returns (uint256) {
+        return userBalance[msg.sender];
+    }
     function addBook(uint256 _bookId, string memory _title, string memory _author, uint256 _yearOfPublish) public onlyOwner {
         require(books[_bookId].borrowDate == 0, "Book with this ID already exists.");
         books[_bookId] = Book(_bookId, _title, _author, _yearOfPublish, 0, 0, false);
@@ -45,9 +47,9 @@ contract LibraryManagement {
     }
 
     function returnBook(uint256 _bookId) public {
-        require(books[_bookId].isBorrowed, "Book is not borrowed.");
+       // require(books[_bookId].isBorrowed, "Book is not borrowed.");
         uint256 borrowDate = books[_bookId].borrowDate;
-        books[_bookId].borrowDate = 0;
+        books[_bookId].borrowDate = borrowDate;
         books[_bookId].isBorrowed = false;
         books[_bookId].returnDate = block.timestamp;
         removeBorrowedBook(msg.sender, _bookId); // Remove the book from the user's borrowed books.
@@ -56,7 +58,7 @@ contract LibraryManagement {
     }
 
     function calculateBill(uint256 _bookId) public view returns (uint256) {
-        require(books[_bookId].isBorrowed, "Book is not borrowed.");
+        //require(books[_bookId].isBorrowed, "Book is not borrowed.");
         uint256 borrowDate = books[_bookId].borrowDate;
         uint256 returnDate = books[_bookId].returnDate == 0 ? block.timestamp : books[_bookId].returnDate;
         // You can define your own billing logic here, e.g., charge per day.
@@ -77,12 +79,18 @@ contract LibraryManagement {
                 count++;
             }
         }
-        // assembly {
-        //     mstore(availableBooks, count);
-        // }
+        assembly {
+            mstore(availableBooks, count)
+        }
         return availableBooks;
     }
-
+    function getBookDetails(uint256 _bookId) public view returns (string memory, string memory, uint256, bool) {
+    require(_bookId > 0 && _bookId <= bookCount, "Invalid book ID");
+    
+    Book memory book = books[_bookId];
+    
+    return (book.title, book.author, book.yearOfPublish, book.isBorrowed);
+}
     function removeBorrowedBook(address user, uint256 _bookId) internal {
         uint256[] storage borrowedBooks = userBorrowedBooks[user];
         for (uint256 i = 0; i < borrowedBooks.length; i++) {
@@ -94,7 +102,7 @@ contract LibraryManagement {
         }
     }
 
-    function payBill() public {
+    function payBill() public payable {
         uint256 userBill = userBalance[msg.sender];
         require(userBill > 0, "No outstanding bill to pay.");
         require(address(this).balance >= userBill, "Library's balance is insufficient for the payment.");

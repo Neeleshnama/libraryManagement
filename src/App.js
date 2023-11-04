@@ -10,12 +10,14 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import Profile from './components/borrowedbooks';
 
 function App() {
   return (
     <div className="container">
         <Routes>
           <Route path="/" element={<Librarydashboard />}/>
+          <Route path="/borrowed" element={<Profile/>}/>
           {/* <Route path="/nftPage" element={<NFTPage />}/>        
           <Route path="/profile" element={<Profile />}/>
           <Route path="/sellNFT" element={<SellNFT />}/>              */}
