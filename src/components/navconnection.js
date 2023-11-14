@@ -78,7 +78,6 @@ async function connectWebsite() {
           <ul className='flex items-end justify-between py-3 bg-transparent text-white pr-5'>
           <li className='flex items-end ml-5 pb-2'>
             <Link to="/">
-            <img  alt="" width={120} height={120} className="inline-block -mt-2"/>
             <div className='inline-block font-bold italic text-2xl ml-2 text-black'>
               library Management
             </div>
@@ -122,7 +121,7 @@ async function connectWebsite() {
           </li>
           </ul>
         </nav>
-        <div className='text-white text-bold text-right mr-10 text-sm'>
+        <div className='text-white text-bold text-right mr-10 text-sm' style={{color:'black',fontSize:'20px'}}>
           {currAddress !== "0x" ? "Connected to":"Not Connected. Please login to view books"} {currAddress !== "0x" ? (currAddress.substring(0,15)+'...'):""}
         </div>
       </div>

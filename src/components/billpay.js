@@ -74,9 +74,11 @@ function BillManagement() {
   return (
     <div>
         <Navbar/>
+        <div style={{fontSize:'30px'}}>
       <h2>Bill Management</h2>
       <p>Unpaid Amount: {unpaidAmount} ETH</p>
-      <button onClick={payBill}>Pay Bill</button>
+      <button  style={{backgroundColor:'black',color:'white',borderRadius:'5px',position:'relative',top:'40px',left:'70px'}} onClick={payBill}>Pay Bill</button>
+      </div>
     </div>
   );
 }
